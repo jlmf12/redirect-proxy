@@ -3,7 +3,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
-  const { nombre, email, origen, fecha, destino } = req.body;
+  // Parseo manual del body (Vercel no lo hace en proyectos planos)
+  const body = JSON.parse(req.body || "{}");
+  const { nombre, email, origen, fecha, destino } = body;
 
   const token = process.env.GITHUB_TOKEN;
 
@@ -36,8 +38,3 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true });
 }
 
-export const config = {
-  api: {
-    bodyParser: true
-  }
-};
