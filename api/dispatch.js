@@ -1,40 +1,19 @@
-export const config = {
-    runtime: "edge"
-};
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método no permitido" });
+  }
 
-export default async function handler(req) {
-    const body = await req.json();
-    const { nombre, email, origen, fecha, destino } = body;
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbx_n84HH3lLl-pyUkb8_f8M3svEtJFcQmJlv7mTlvV_9d0yRkxRFvlI0_dUjyQXjVh3/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req.body)
+    });
 
-    // Fecha y hora separadas
-    const dateObj = new Date(fecha);
-    const fechaLocal = dateObj.toISOString().split("T")[0];
-    const horaLocal = dateObj.toISOString().split("T")[1].split(".")[0];
+    const result = await response.json();
+    return res.status(200).json(result);
 
-    // Geolocalización
-    let pais = "Desconocido";
-    let region = "Desconocido";
-    let ciudad = "Desconocido";
-    let ip = "Desconocida";
-
-    try {
-        const geoRes = await fetch("https://ipapi.co/json/");
-        const geo = await geoRes.json();
-
-        pais = geo.country_name || "Desconocido";
-        region = geo.region || "Desconocido";
-        ciudad = geo.city || "Desconocido";
-        ip = geo.ip || "Desconocida";
-    } catch (e) {
-        // valores por defecto
-    }
-
-    // Escritura en CSV (Edge Runtime usa Blob + R2 / KV / Storage)
-    // Para mantener tu flujo actual, usamos una API interna de Vercel: no FS.
-    // Necesitas cambiar a Vercel KV o Vercel Blob para persistencia real.
-
-    return new Response(
-        JSON.stringify({ ok: false, msg: "El filesystem de Edge no permite escribir CSV directamente. Necesitamos mover el CSV a Vercel KV o Blob." }),
-        { status: 500 }
-    );
+  } catch (error) {
+    return res.status(500).json({ ok: false, error: error.message });
+  }
 }
