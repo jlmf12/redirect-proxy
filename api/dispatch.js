@@ -13,6 +13,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido" });
   }
 
+  // Vercel parsea JSON automáticamente en serverless functions
   const { nombre, email, origen, fecha, destino } = req.body;
 
   const token = process.env.GITHUB_TOKEN;
