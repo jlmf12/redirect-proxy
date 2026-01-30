@@ -1,43 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Acceso</title>
-  <script src="redirect.js?v=3" defer></script>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAM - Descarga mi app</title>
+
+<style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 40px auto;
-      line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #0a1a2b; /* Azul oscuro estilo chat */
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
     }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
+
+    .container {
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
     }
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
     button {
-      margin-top: 10px;
-      cursor: pointer;
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        background-color: #1e90ff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: bold;
     }
-  </style>
+
+    button:hover {
+        background-color: #1877d3;
+    }
+</style>
 </head>
+
 <body>
+    <div class="container">
+        <h1>JAM - Descarga mi app</h1>
 
-<h2>Acceso</h2>
+        <form id="form">
+            <input type="text" id="nombre" placeholder="Tu nombre" required>
+            <input type="email" id="email" placeholder="Tu email" required>
+            <button type="submit">Continuar</button>
+        </form>
+    </div>
 
-<form id="registroForm">
-  <label>Nombre:</label>
-  <input type="text" name="nombre" required>
-
-  <label>Correo (opcional):</label>
-  <input type="email" name="email">
-
-  <button type="submit">Continuar</button>
-</form>
+<script>
+    document.getElementById("form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const nombre = document.getElementById("nombre").value;
+        const email = document.getElementById("email").value;
+        window.location.href = `redirect.html?nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}`;
+    });
+</script>
 
 </body>
 </html>
-
-
-
