@@ -1,0 +1,23 @@
+name: Registrar click
+
+on:
+  repository_dispatch:
+    types: [registro_click]
+
+jobs:
+  actualizar_csv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Añadir registro al CSV
+        run: |
+          echo "${{ github.event.client_payload.nombre }},${{ github.event.client_payload.email }},${{ github.event.client_payload.origen }},${{ github.event.client_payload.fecha }},${{ github.event.client_payload.destino }}" >> registros.csv
+
+      - name: Commit y push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add registros.csv
+          git commit -m "Nuevo registro"
+          git push
