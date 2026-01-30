@@ -1,0 +1,32 @@
+name: Registrar acceso
+
+on:
+  repository_dispatch:
+    types: [registro_click]
+
+jobs:
+  escribir_log:
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Añadir registro al CSV
+        run: |
+          echo "${{ github.event.client_payload.fecha }},${{ github.event.client_payload.nombre }},${{ github.event.client_payload.email }},${{ github.event.client_payload.origen }},${{ github.event.client_payload.destino }}" >> logs/registro.csv
+
+      - name: Commit y push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add logs/registro.csv
+          git commit -m "Nuevo registro" || echo "No hay cambios para commitear"
+          git push https://x-access-token:${GH_TOKEN}@github.com/jlmf12/redirect-proxy.git

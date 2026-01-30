@@ -2,23 +2,24 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Redirigiendo…</title>
-  <script>
-    // 1. Obtener el enlace real desde la URL
-    const params = new URLSearchParams(window.location.search);
-    const destino = params.get("u");
-
-    // 2. Llamar a tu Web App con ese enlace
-    if (destino) {
-      const webapp = "https://script.google.com/macros/s/AKfycbwAqU-DqreL75sxHB-OVa2cuDl6tfaGwbDBY0X0K6saYDVf4YMbK0MvULCiYno_DxLOEw/exec";
-      const url = webapp + "?link=" + encodeURIComponent(destino) + "&origen=sites";
-
-      window.location.href = url;
-    } else {
-      document.write("Falta el parámetro ?u=");
-    }
-  </script>
+  <title>Acceso</title>
 </head>
 <body>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const destino = params.get("u");
+  const origen = params.get("origen") || "desconocido";
+
+  if (!destino) {
+    document.body.innerHTML = "<h3>Falta el parámetro ?u=</h3>";
+  } else {
+    // Guardamos destino y origen para el formulario
+    localStorage.setItem("destino_final", destino);
+    localStorage.setItem("origen_final", origen);
+    window.location.href = "form.html";
+  }
+</script>
+
 </body>
 </html>
