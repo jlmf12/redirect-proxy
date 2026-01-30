@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redirigiendo...</title>
-
 <style>
     body {
         margin: 0;
@@ -18,44 +17,33 @@
         height: 100vh;
         text-align: center;
     }
-
-    .box {
-        max-width: 300px;
-    }
 </style>
 </head>
 
 <body>
-    <div class="box">
-        <h2>Un momento…</h2>
-        <p>Estamos preparando tu descarga.</p>
-    </div>
+    <h2>Un momento…</h2>
 
 <script>
-    // Leer parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const nombre = params.get("nombre");
     const email = params.get("email");
+    const destino = params.get("destino");
 
-    // Datos del click
     const payload = {
         nombre,
         email,
         origen: "formulario",
         fecha: new Date().toISOString(),
-        destino: "https://tu-enlace-final.com" // <-- CAMBIA ESTO
+        destino
     };
 
-    // Enviar registro a Vercel
     fetch("https://redirect-proxy-mu.vercel.app/api/dispatch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     })
-    .catch(() => {}) // Ignorar errores para no bloquear la redirección
     .finally(() => {
-        // Redirigir al destino final
-        window.location.href = payload.destino;
+        window.location.href = destino;
     });
 </script>
 
