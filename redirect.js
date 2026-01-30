@@ -14,11 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("FORMULARIO ENVIADO"); // Debug
 
         try {
-            const response = await fetch("https://api.github.com/repos/jlmf12/redirect-proxy/dispatches", {
-                method: "POST",
-                headers: {
-                    "Accept": "application/vnd.github+json",
-                    "Authorization": "Bearer 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"
+            const response = aawait fetch("https://redirect-proxy-mu.vercel.app/api/dispatch", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        nombre,
+        email,
+        origen,
+        fecha,
+        destino
+    
+});
+
                 },
                 body: JSON.stringify({
                     event_type: "registro_click",
@@ -41,4 +50,5 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = destino;
     });
 });
+
 
