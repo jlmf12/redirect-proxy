@@ -10,15 +10,26 @@ export default async function handler(req, res) {
     const fechaLocal = dateObj.toISOString().split("T")[0];
     const horaLocal = dateObj.toISOString().split("T")[1].split(".")[0];
 
-    // Obtener país de origen por IP
+    // Obtener país, región, ciudad e IP
     let pais = "Desconocido";
+    let region = "Desconocido";
+    let ciudad = "Desconocido";
+    let ip = "Desconocida";
 
     try {
         const geoRes = await fetch("https://ipapi.co/json/");
         const geo = await geoRes.json();
-        pais = geo.country_name || geo.country || "Desconocido";
+
+        pais = geo.country_name || "Desconocido";
+        region = geo.region || "Desconocido";
+        ciudad = geo.city || "Desconocido";
+        ip = geo.ip || "Desconocida";
+
     } catch (e) {
         pais = "Error";
+        region = "Error";
+        ciudad = "Error";
+        ip = "Error";
     }
 
     const fs = require("fs");
@@ -30,13 +41,13 @@ export default async function handler(req, res) {
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(
             filePath,
-            "nombre,email,origen,fecha,hora,pais,destino\n",
+            "nombre,email,origen,fecha,hora,pais,region,ciudad,ip,destino\n",
             "utf8"
         );
     }
 
     // Añadir la nueva línea
-    const linea = `${nombre || ""},${email || ""},${origen || ""},${fechaLocal},${horaLocal},${pais},${destino || ""}\n`;
+    const linea = `${nombre || ""},${email || ""},${origen || ""},${fechaLocal},${horaLocal},${pais},${region},${ciudad},${ip},${destino || ""}\n`;
 
     fs.appendFileSync(filePath, linea, "utf8");
 
