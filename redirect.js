@@ -13,8 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     await fetch("https://api.github.com/repos/jlmf12/redirect-proxy/dispatches", {
       method: "POST",
-      headers: {
-        "Accept": "application/vnd.github+json"
+     headers: {
+    "Accept": "application/vnd.github+json",
+    "Authorization": "Bearer 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"
+
+
       },
       body: JSON.stringify({
         event_type: "registro_click",
@@ -31,3 +34,4 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = destino;
   });
 });
+
