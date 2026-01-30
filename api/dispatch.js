@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Método no permitido" });
@@ -10,7 +12,7 @@ export default async function handler(req, res) {
     const fechaLocal = dateObj.toISOString().split("T")[0];
     const horaLocal = dateObj.toISOString().split("T")[1].split(".")[0];
 
-    // Obtener país, región, ciudad e IP
+    // Geolocalización por IP
     let pais = "Desconocido";
     let region = "Desconocido";
     let ciudad = "Desconocido";
@@ -26,10 +28,7 @@ export default async function handler(req, res) {
         ip = geo.ip || "Desconocida";
 
     } catch (e) {
-        pais = "Error";
-        region = "Error";
-        ciudad = "Error";
-        ip = "Error";
+        // Si falla, dejamos valores por defecto
     }
 
     const fs = require("fs");
