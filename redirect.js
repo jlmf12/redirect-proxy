@@ -8,6 +8,13 @@ document.getElementById("form").addEventListener("submit", function(e) {
     const params = new URLSearchParams(window.location.search);
     const destino = params.get("destino");
 
+    // Si no hay destino → error controlado
+    if (!destino) {
+        alert("Falta el parámetro destino en la URL.");
+        return;
+    }
+
     // Redirigir al proxy final
-    window.location.href = `redirect.html?nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&destino=${encodeURIComponent(destino)}`;
+    window.location.href =
+        `redirect.html?nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&destino=${encodeURIComponent(destino)}`;
 });
