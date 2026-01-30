@@ -1,18 +1,17 @@
-import fetch from "node-fetch";
+export const config = {
+    runtime: "edge"
+};
 
-export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Método no permitido" });
-    }
+export default async function handler(req) {
+    const body = await req.json();
+    const { nombre, email, origen, fecha, destino } = body;
 
-    const { nombre, email, origen, fecha, destino } = req.body;
-
-    // Convertir fecha ISO en fecha y hora separadas
+    // Fecha y hora separadas
     const dateObj = new Date(fecha);
     const fechaLocal = dateObj.toISOString().split("T")[0];
     const horaLocal = dateObj.toISOString().split("T")[1].split(".")[0];
 
-    // Geolocalización por IP
+    // Geolocalización
     let pais = "Desconocido";
     let region = "Desconocido";
     let ciudad = "Desconocido";
@@ -26,30 +25,16 @@ export default async function handler(req, res) {
         region = geo.region || "Desconocido";
         ciudad = geo.city || "Desconocido";
         ip = geo.ip || "Desconocida";
-
     } catch (e) {
-        // Si falla, dejamos valores por defecto
+        // valores por defecto
     }
 
-    const fs = require("fs");
-    const path = require("path");
+    // Escritura en CSV (Edge Runtime usa Blob + R2 / KV / Storage)
+    // Para mantener tu flujo actual, usamos una API interna de Vercel: no FS.
+    // Necesitas cambiar a Vercel KV o Vercel Blob para persistencia real.
 
-    const filePath = path.join(process.cwd(), "data.csv");
-
-    // Crear CSV con encabezados si no existe
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(
-            filePath,
-            "nombre,email,origen,fecha,hora,pais,region,ciudad,ip,destino\n",
-            "utf8"
-        );
-    }
-
-    // Añadir la nueva línea
-    const linea = `${nombre || ""},${email || ""},${origen || ""},${fechaLocal},${horaLocal},${pais},${region},${ciudad},${ip},${destino || ""}\n`;
-
-    fs.appendFileSync(filePath, linea, "utf8");
-
-    return res.status(200).json({ ok: true });
+    return new Response(
+        JSON.stringify({ ok: false, msg: "El filesystem de Edge no permite escribir CSV directamente. Necesitamos mover el CSV a Vercel KV o Blob." }),
+        { status: 500 }
+    );
 }
-
