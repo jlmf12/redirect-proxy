@@ -10,25 +10,35 @@ export default async function handler(req, res) {
     const fechaLocal = dateObj.toISOString().split("T")[0];
     const horaLocal = dateObj.toISOString().split("T")[1].split(".")[0];
 
+    // Obtener país de origen por IP
+    let pais = "Desconocido";
+
+    try {
+        const geoRes = await fetch("https://ipapi.co/json/");
+        const geo = await geoRes.json();
+        pais = geo.country_name || geo.country || "Desconocido";
+    } catch (e) {
+        pais = "Error";
+    }
+
     const fs = require("fs");
     const path = require("path");
 
     const filePath = path.join(process.cwd(), "data.csv");
 
-    // Si el archivo no existe, crear con encabezados
+    // Crear CSV con encabezados si no existe
     if (!fs.existsSync(filePath)) {
         fs.writeFileSync(
             filePath,
-            "nombre,email,origen,fecha,hora,destino\n",
+            "nombre,email,origen,fecha,hora,pais,destino\n",
             "utf8"
         );
     }
 
     // Añadir la nueva línea
-    const linea = `${nombre || ""},${email || ""},${origen || ""},${fechaLocal},${horaLocal},${destino || ""}\n`;
+    const linea = `${nombre || ""},${email || ""},${origen || ""},${fechaLocal},${horaLocal},${pais},${destino || ""}\n`;
 
     fs.appendFileSync(filePath, linea, "utf8");
 
     return res.status(200).json({ ok: true });
 }
-
