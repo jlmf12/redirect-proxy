@@ -11,37 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = form.email.value || "";
         const fecha = new Date().toISOString();
 
-        console.log("FORMULARIO ENVIADO"); // Debug
+        console.log("FORMULARIO ENVIADO");
 
         try {
-            const response = aawait fetch("https://redirect-proxy-mu.vercel.app/api/dispatch", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        nombre,
-        email,
-        origen,
-        fecha,
-        destino
-    
-});
-
+            const response = await fetch("https://redirect-proxy-mu.vercel.app/api/dispatch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    event_type: "registro_click",
-                    client_payload: {
-                        nombre,
-                        email,
-                        origen,
-                        fecha,
-                        destino
-                    }
+                    nombre,
+                    email,
+                    origen,
+                    fecha,
+                    destino
                 })
             });
 
-            console.log("STATUS:", response.status); // Debug
+            console.log("STATUS:", response.status);
 
         } catch (error) {
             console.error("ERROR EN FETCH:", error);
@@ -50,5 +37,3 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = destino;
     });
 });
-
-
